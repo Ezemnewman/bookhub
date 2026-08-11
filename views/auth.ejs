@@ -1,0 +1,81 @@
+<div class="auth-page">
+  <div class="container">
+    <div class="auth-wrapper">
+
+      <div class="auth-visual d-none d-lg-flex">
+        <div class="auth-visual-inner">
+          <a href="/" class="auth-brand"><i class="bi bi-book-half"></i> Book<span>Hub</span></a>
+          <h2 class="mt-4">Your next favorite book is waiting.</h2>
+          <p>Log in or create an account to check out, download instantly, and keep every purchase in one place.</p>
+          <ul class="auth-perks list-unstyled">
+            <li><i class="bi bi-check-circle-fill"></i> Instant downloads on every order</li>
+            <li><i class="bi bi-check-circle-fill"></i> Full order history, always available</li>
+            <li><i class="bi bi-check-circle-fill"></i> Re-download your books anytime</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="auth-panel">
+        <div class="auth-tabs">
+          <a href="/login<%= next ? '?next=' + encodeURIComponent(next) : '' %>"
+             class="auth-tab <%= activeTab === 'login' ? 'active' : '' %>">Log In</a>
+          <a href="/signup<%= next ? '?next=' + encodeURIComponent(next) : '' %>"
+             class="auth-tab <%= activeTab === 'signup' ? 'active' : '' %>">Sign Up</a>
+        </div>
+
+        <% if (activeTab === 'login') { %>
+          <div class="auth-form-body">
+            <h4 class="mb-1">Welcome back</h4>
+            <p class="text-muted mb-4">Log in to continue to your account.</p>
+            <form action="/login" method="POST">
+              <input type="hidden" name="next" value="<%= next %>">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required autofocus>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-brand w-100 py-2">Log In</button>
+            </form>
+            <p class="text-center text-muted mt-4 mb-0">
+              Don't have an account?
+              <a href="/signup<%= next ? '?next=' + encodeURIComponent(next) : '' %>">Sign up</a>
+            </p>
+          </div>
+        <% } else { %>
+          <div class="auth-form-body">
+            <h4 class="mb-1">Create your account</h4>
+            <p class="text-muted mb-4">It only takes a minute.</p>
+            <form action="/register" method="POST">
+              <input type="hidden" name="next" value="<%= next %>">
+              <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" required autofocus>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required minlength="4">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirmPassword" class="form-control" required minlength="4">
+              </div>
+              <button type="submit" class="btn btn-brand w-100 py-2">Create Account</button>
+            </form>
+            <p class="text-center text-muted mt-4 mb-0">
+              Already have an account?
+              <a href="/login<%= next ? '?next=' + encodeURIComponent(next) : '' %>">Log in</a>
+            </p>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</div>

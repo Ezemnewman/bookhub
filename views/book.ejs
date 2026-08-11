@@ -1,0 +1,59 @@
+<div class="container my-5">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+      <li class="breadcrumb-item active"><%= book.title %></li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <div class="col-md-4 book-detail-cover">
+      <img src="<%= book.cover %>" alt="<%= book.title %>">
+    </div>
+    <div class="col-md-8">
+      <div class="book-cat mb-2"><%= book.category %></div>
+      <h1><%= book.title %></h1>
+      <p class="text-muted">by <strong><%= book.author %></strong></p>
+      <div class="stars mb-3">
+        <% for (let i = 1; i <= 5; i++) { %><i class="bi bi-star<%= i <= book.rating ? '-fill' : '' %>"></i><% } %>
+        <span class="text-muted ms-2">(<%= book.rating %>.0)</span>
+      </div>
+
+      <div class="book-detail-price mb-3">
+        <% if (book.oldPrice) { %><span class="text-decoration-line-through text-muted fs-6 me-2">$<%= book.oldPrice.toFixed(2) %></span><% } %>
+        $<%= book.price.toFixed(2) %>
+      </div>
+
+      <p><%= book.description %></p>
+      <p><span class="badge-format"><i class="bi bi-file-earmark-text"></i> <%= book.format %></span></p>
+
+      <form action="/cart/add/<%= book.id %>" method="POST" class="d-flex align-items-center gap-3 my-4">
+        <div class="input-group qty-input">
+          <button class="btn btn-outline-secondary" type="button" data-qty-step="-1" data-target="#qty"><i class="bi bi-dash"></i></button>
+          <input type="number" id="qty" name="qty" value="1" min="1" class="form-control text-center">
+          <button class="btn btn-outline-secondary" type="button" data-qty-step="1" data-target="#qty"><i class="bi bi-plus"></i></button>
+        </div>
+        <button type="submit" class="btn btn-brand"><i class="bi bi-bag-plus"></i> Add to Cart</button>
+      </form>
+
+      <ul class="list-unstyled text-muted small">
+        <li><i class="bi bi-cloud-arrow-down"></i> Instant download after purchase</li>
+        <li><i class="bi bi-arrow-repeat"></i> Re-download anytime from My Account</li>
+      </ul>
+    </div>
+  </div>
+
+  <% if (related.length) { %>
+    <div class="mt-5 pt-4 border-top">
+      <h4 class="mb-4">You might also like</h4>
+      <div class="row g-4">
+        <% related.forEach(b => { %>
+          <div class="col-6 col-md-3">
+            <%- include('partials/book-card', { book: b }) %>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
+</div>

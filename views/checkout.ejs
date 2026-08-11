@@ -1,0 +1,74 @@
+<div class="page-banner">
+  <div class="container">
+    <h1>Checkout</h1>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row g-5">
+    <div class="col-lg-7">
+      <form action="/checkout" method="POST">
+        <h5 class="mb-3">Billing Details</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" value="<%= currentUser.name %>" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="<%= currentUser.email %>" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Country</label>
+            <select class="form-select">
+              <option>United States</option>
+              <option>Nigeria</option>
+              <option>United Kingdom</option>
+              <option>India</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <h5 class="mb-3">Payment</h5>
+        <p class="text-muted small"><i class="bi bi-shield-lock"></i> Your payment information is processed securely.</p>
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <label class="form-label">Card Number</label>
+            <input type="text" id="cardNumber" name="cardNumber" class="form-control"
+                   placeholder="4242 4242 4242 4242" inputmode="numeric" autocomplete="cc-number" maxlength="19" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Expiry</label>
+            <input type="text" id="cardExpiry" name="cardExpiry" class="form-control"
+                   placeholder="MM/YY" inputmode="numeric" autocomplete="cc-exp" maxlength="5" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">CVC</label>
+            <input type="text" id="cardCvc" name="cardCvc" class="form-control"
+                   placeholder="123" inputmode="numeric" autocomplete="cc-csc" maxlength="4" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-brand w-100 py-2">Pay $<%= total.toFixed(2) %> & Complete Order</button>
+
+      </form>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="summary-box">
+        <h5 class="mb-3">Your Order</h5>
+        <% items.forEach(item => { %>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-truncate" style="max-width: 220px"><%= item.title %> &times; <%= item.qty %></span>
+            <span>$<%= item.subtotal.toFixed(2) %></span>
+          </div>
+        <% }) %>
+        <div class="d-flex justify-content-between total-row">
+          <span>Total</span>
+          <span>$<%= total.toFixed(2) %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

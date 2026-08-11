@@ -1,0 +1,21 @@
+<div class="book-card">
+  <a href="/book/<%= book.id %>"><img src="<%= book.cover %>" alt="<%= book.title %>"></a>
+  <div class="book-card-body">
+    <div class="book-cat"><%= book.category %></div>
+    <div class="book-title"><a href="/book/<%= book.id %>"><%= book.title %></a></div>
+    <div class="book-author">by <%= book.author %></div>
+    <div class="stars mb-2">
+      <% for (let i = 1; i <= 5; i++) { %><i class="bi bi-star<%= i <= book.rating ? '-fill' : '' %>"></i><% } %>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="book-price">
+        <% if (book.oldPrice) { %><span class="old">$<%= book.oldPrice.toFixed(2) %></span><% } %>
+        $<%= book.price.toFixed(2) %>
+      </div>
+      <form action="/cart/add/<%= book.id %>" method="POST">
+        <input type="hidden" name="qty" value="1">
+        <button class="btn btn-sm btn-brand" title="Add to cart"><i class="bi bi-bag-plus"></i></button>
+      </form>
+    </div>
+  </div>
+</div>

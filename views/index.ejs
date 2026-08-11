@@ -1,0 +1,70 @@
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1>Your next favorite book is one click away.</h1>
+        <p>Thousands of ebooks across every genre — buy, download, and start reading in under a minute. No shipping, no waiting.</p>
+        <a href="/shop" class="btn btn-brand me-2">Shop New Releases</a>
+        <a href="/service" class="btn btn-outline-brand">How It Works</a>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-center">
+        <div class="row g-3">
+          <% featured.slice(0,2).forEach(b => { %>
+            <div class="col-6"><img src="<%= b.cover %>" class="img-fluid rounded shadow" alt="<%= b.title %>"></div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container my-5">
+  <div class="section-title">
+    <h2>Featured Ebooks</h2>
+    <p>Hand-picked titles our readers keep coming back for.</p>
+  </div>
+  <div class="row g-4">
+    <% featured.forEach(book => { %>
+      <div class="col-6 col-md-3">
+        <%- include('partials/book-card', { book }) %>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<section class="container my-5">
+  <div class="section-title">
+    <h2>Bestsellers</h2>
+    <p>What everyone's downloading this month.</p>
+  </div>
+  <div class="row g-4">
+    <% bestsellers.forEach(book => { %>
+      <div class="col-6 col-md-3">
+        <%- include('partials/book-card', { book }) %>
+      </div>
+    <% }) %>
+  </div>
+  <div class="text-center mt-4">
+    <a href="/shop" class="btn btn-outline-brand">Browse All Books</a>
+  </div>
+</section>
+
+<section class="container my-5">
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <i class="bi bi-lightning-charge fs-1" style="color: var(--brand)"></i>
+      <h5 class="mt-3">Instant Download</h5>
+      <p class="text-muted">Get your ebook the moment your order is confirmed — no waiting around.</p>
+    </div>
+    <div class="col-md-4">
+      <i class="bi bi-shield-check fs-1" style="color: var(--brand)"></i>
+      <h5 class="mt-3">Secure Checkout</h5>
+      <p class="text-muted">Simple, guided checkout so buying a book takes seconds, not minutes.</p>
+    </div>
+    <div class="col-md-4">
+      <i class="bi bi-phone fs-1" style="color: var(--brand)"></i>
+      <h5 class="mt-3">Read Anywhere</h5>
+      <p class="text-muted">EPUB, MOBI and PDF formats supported on every device you own.</p>
+    </div>
+  </div>
+</section>

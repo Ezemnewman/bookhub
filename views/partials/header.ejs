@@ -1,0 +1,32 @@
+<header class="site-header">
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-book-half"></i> Book<span>Hub</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="/service">Our Service</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact-us">Contact Us</a></li>
+        </ul>
+        <form class="d-flex search-form" action="/shop" method="GET">
+          <input class="form-control" type="search" name="q" placeholder="Search books or authors...">
+          <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+        <div class="nav-icons">
+          <a href="/my-account" title="My Account"><i class="bi bi-person"></i></a>
+          <a href="/cart" class="cart-link" title="Cart">
+            <i class="bi bi-bag"></i>
+            <span class="badge"><%= cartCount %></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
