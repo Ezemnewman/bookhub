@@ -14,6 +14,12 @@ const db = require('./lib/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Railway and Vercel both sit behind a proxy that terminates HTTPS.
+// Without this, Express doesn't know the connection is actually secure,
+// so it silently refuses to set secure cookies — which breaks sessions
+// (and therefore the cart) in production.
+app.set('trust proxy', 1);
+
 if (!process.env.SESSION_SECRET) {
   console.warn('[server] SESSION_SECRET is not set — set it in your environment before deploying.');
 }
@@ -44,6 +50,20 @@ app.use(session({
   }
 }));
 app.use(flash());
+
+// On Vercel, a cold start could otherwise let the very first request try to
+// read/write users or orders before db.init() has finished creating those
+// tables. This makes every request wait for that one-time setup; once it
+// resolves, later (warm) requests pass through instantly.
+if (process.env.VERCEL) {
+  const dbReady = db.init().catch(err => {
+    console.error('Failed to initialize database:', err);
+    throw err;
+  });
+  app.use((req, res, next) => {
+    dbReady.then(() => next()).catch(next);
+  });
+}
 
 // Make cart, user, and flash messages available in every view
 app.use((req, res, next) => {
@@ -271,6 +291,8 @@ app.use((err, req, res, next) => {
 // Locally and on Railway, run a normal long-lived server.
 // On Vercel, the platform imports `app` itself and calls it per-request, so
 // app.listen() must be skipped there — Vercel sets VERCEL=1 automatically.
+// (The Postgres init-on-cold-start gate for Vercel lives near the top of
+// this file, before any routes are registered — see `dbReady` below.)
 if (!process.env.VERCEL) {
   db.init()
     .then(() => {
@@ -282,10 +304,6 @@ if (!process.env.VERCEL) {
       console.error('Failed to initialize database:', err);
       process.exit(1);
     });
-} else {
-  // Fire and forget on cold start — subsequent invocations reuse the same
-  // warm instance so this only runs occasionally.
-  db.init().catch(err => console.error('Failed to initialize database:', err));
 }
 
 module.exports = app;
