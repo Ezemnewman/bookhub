@@ -31,10 +31,7 @@
             <% order.items.forEach(item => { %>
               <div class="d-flex justify-content-between small text-muted">
                 <span><%= item.title %> &times; <%= item.qty %></span>
-                <span>
-                  $<%= item.subtotal.toFixed(2) %>
-                  <a href="#" class="ms-2" title="Download"><i class="bi bi-cloud-arrow-down"></i></a>
-                </span>
+                <span>$<%= item.subtotal.toFixed(2) %></span>
               </div>
             <% }) %>
             <div class="d-flex justify-content-between fw-semibold mt-2 pt-2 border-top">

@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Book Hub - an ebook store front end built with Node.js/Express",
   "main": "server.js",
-  "engines": {
-    "node": ">=18.x"
-  },
+  "engines": { "node": ">=18.x" },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"

@@ -14,10 +14,10 @@ const db = require('./lib/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Railway and Vercel both sit behind a proxy that terminates HTTPS.
-// Without this, Express doesn't know the connection is actually secure,
-// so it silently refuses to set secure cookies — which breaks sessions
-// (and therefore the cart) in production.
+process.on('unhandledRejection', err => {
+  console.error('Unhandled rejection:', err);
+});
+
 app.set('trust proxy', 1);
 
 if (!process.env.SESSION_SECRET) {
@@ -35,39 +35,32 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Sessions are stored in Postgres (table auto-created below) instead of
-// in-memory, since serverless platforms like Vercel don't keep memory
-// between requests and Railway may run more than one instance.
 app.use(session({
   store: new pgSession({ pool: db.pool, createTableIfMissing: true }),
   secret: process.env.SESSION_SECRET || 'bookhub-dev-secret-change-me',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    maxAge: 1000 * 60 * 60 * 24,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax'
   }
 }));
 app.use(flash());
 
-// On Vercel, a cold start could otherwise let the very first request try to
-// read/write users or orders before db.init() has finished creating those
-// tables. This makes every request wait for that one-time setup; once it
-// resolves, later (warm) requests pass through instantly.
 if (process.env.VERCEL) {
+  let dbInitError = null;
   const dbReady = db.init().catch(err => {
     console.error('Failed to initialize database:', err);
-    throw err;
+    dbInitError = err;
   });
   app.use((req, res, next) => {
-    dbReady.then(() => next()).catch(next);
+    dbReady.then(() => next(dbInitError || undefined));
   });
 }
 
-// Make cart, user, and flash messages available in every view
 app.use((req, res, next) => {
-  if (!req.session.cart) req.session.cart = {}; // { bookId: qty }
+  if (!req.session.cart) req.session.cart = {};
   res.locals.cartCount = Object.values(req.session.cart).reduce((a, b) => a + b, 0);
   res.locals.currentUser = req.session.user || null;
   res.locals.success = req.flash('success');
@@ -83,8 +76,6 @@ function requireLogin(req, res, next) {
   next();
 }
 
-// Wrap async route handlers so rejected promises reach Express's error handler
-// instead of crashing the process (important on serverless).
 const asyncRoute = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 function getCartDetails(req) {
@@ -99,38 +90,44 @@ function getCartDetails(req) {
 }
 
 // ---- Routes ----
-
-// Home
 app.get('/', (req, res) => {
   const featured = books.slice(0, 4);
-  const bestsellers = books.slice(4);
+  const bestsellers = books.slice(4, 12);
   res.render('index', { title: 'Book Hub — Buy & Download Ebooks', featured, bestsellers });
 });
 
-// Shop / catalog with category filter + search
+const BOOKS_PER_PAGE = 32;
+
 app.get('/shop', (req, res) => {
   const { category, q } = req.query;
   let results = books;
-  if (category && category !== 'All') {
-    results = results.filter(b => b.category === category);
-  }
+  if (category && category !== 'All') results = results.filter(b => b.category === category);
   if (q) {
     const term = q.toLowerCase();
-    results = results.filter(b =>
-      b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term)
-    );
+    results = results.filter(b => b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term));
   }
   const categories = ['All', ...new Set(books.map(b => b.category))];
+
+  const totalItems = results.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / BOOKS_PER_PAGE));
+  let page = parseInt(req.query.page, 10) || 1;
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+  const startIdx = (page - 1) * BOOKS_PER_PAGE;
+  const pageBooks = results.slice(startIdx, startIdx + BOOKS_PER_PAGE);
+
   res.render('shop', {
     title: 'Shop Ebooks — Book Hub',
-    books: results,
+    books: pageBooks,
     categories,
     activeCategory: category || 'All',
-    q: q || ''
+    q: q || '',
+    page,
+    totalPages,
+    totalItems
   });
 });
 
-// Book detail
 app.get('/book/:id', (req, res) => {
   const book = books.find(b => b.id === req.params.id);
   if (!book) return res.status(404).render('404', { title: 'Book not found' });
@@ -138,16 +135,14 @@ app.get('/book/:id', (req, res) => {
   res.render('book', { title: `${book.title} — Book Hub`, book, related });
 });
 
-// About / Service / Contact
 app.get('/about', (req, res) => res.render('about', { title: 'About Us — Book Hub' }));
 app.get('/service', (req, res) => res.render('service', { title: 'Our Service — Book Hub' }));
 app.get('/contact-us', (req, res) => res.render('contact', { title: 'Contact Us — Book Hub' }));
 app.post('/contact-us', (req, res) => {
-  req.flash('success', 'Thanks — your message has been sent. We\'ll reply within 1–2 business days.');
+  req.flash('success', "Thanks — your message has been sent. We'll reply within 1–2 business days.");
   res.redirect('/contact-us');
 });
 
-// ---- Cart ----
 app.get('/cart', (req, res) => {
   const { items, total } = getCartDetails(req);
   res.render('cart', { title: 'Your Cart — Book Hub', items, total });
@@ -164,11 +159,8 @@ app.post('/cart/add/:id', (req, res) => {
 
 app.post('/cart/update/:id', (req, res) => {
   const qty = parseInt(req.body.qty, 10);
-  if (qty > 0) {
-    req.session.cart[req.params.id] = qty;
-  } else {
-    delete req.session.cart[req.params.id];
-  }
+  if (qty > 0) req.session.cart[req.params.id] = qty;
+  else delete req.session.cart[req.params.id];
   res.redirect('/cart');
 });
 
@@ -178,7 +170,6 @@ app.post('/cart/remove/:id', (req, res) => {
   res.redirect('/cart');
 });
 
-// ---- Checkout (simulated payment — front end only) ----
 app.get('/checkout', requireLogin, (req, res) => {
   const { items, total } = getCartDetails(req);
   if (items.length === 0) {
@@ -191,10 +182,6 @@ app.get('/checkout', requireLogin, (req, res) => {
 app.post('/checkout', requireLogin, (req, res) => {
   const { items, total } = getCartDetails(req);
   if (items.length === 0) return res.redirect('/cart');
-
-  // No real payment gateway is connected yet, so we're honest about that here
-  // rather than faking a successful order. The cart is left intact so the
-  // customer can retry once payments are live.
   res.render('payment-unavailable', { title: 'Payment Unavailable — Book Hub' });
 });
 
@@ -205,10 +192,6 @@ app.get('/order-success', requireLogin, asyncRoute(async (req, res) => {
   res.render('order-success', { title: 'Order Confirmed — Book Hub', order });
 }));
 
-// ---- Auth / My Account (Postgres-backed users with hashed passwords) ----
-
-// Where to send the user after a successful login/signup.
-// Supports ?next=/checkout so "please log in to continue" flows return you to where you were.
 function safeNext(req) {
   const next = req.body.next || req.query.next;
   return next && next.startsWith('/') ? next : '/my-account';
@@ -234,7 +217,6 @@ app.post('/register', asyncRoute(async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
   const next = safeNext(req);
   const redirectSignup = () => res.redirect(`/signup${next !== '/my-account' ? '?next=' + encodeURIComponent(next) : ''}`);
-
   if (!name || !email || !password) {
     req.flash('error', 'All fields are required.');
     return redirectSignup();
@@ -277,28 +259,19 @@ app.post('/logout', (req, res) => {
   res.redirect('/');
 });
 
-// ---- 404 ----
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Page not found — Book Hub' });
 });
 
-// ---- Error handler ----
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send('Something went wrong. Please try again.');
 });
 
-// Locally and on Railway, run a normal long-lived server.
-// On Vercel, the platform imports `app` itself and calls it per-request, so
-// app.listen() must be skipped there — Vercel sets VERCEL=1 automatically.
-// (The Postgres init-on-cold-start gate for Vercel lives near the top of
-// this file, before any routes are registered — see `dbReady` below.)
 if (!process.env.VERCEL) {
   db.init()
     .then(() => {
-      app.listen(PORT, () => {
-        console.log(`Book Hub running at http://localhost:${PORT}`);
-      });
+      app.listen(PORT, () => console.log(`Book Hub running at http://localhost:${PORT}`));
     })
     .catch(err => {
       console.error('Failed to initialize database:', err);

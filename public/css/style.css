@@ -98,6 +98,16 @@ a { text-decoration: none; }
 }
 .cat-pills a.active, .cat-pills a:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
 
+/* ---- Pagination ---- */
+.pagination .page-link {
+  color: var(--ink); border-color: #e5e5e5; margin: 0 3px; border-radius: 8px !important;
+}
+.pagination .page-item.active .page-link {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+}
+.pagination .page-item.disabled .page-link { color: #bbb; }
+.pagination .page-link:hover { background: var(--bg-soft); color: var(--brand-dark); }
+
 /* ---- Book detail ---- */
 .book-detail-cover img { width: 100%; border-radius: var(--card-radius); box-shadow: 0 20px 40px rgba(0,0,0,.12); }
 .book-detail-price { font-size: 1.8rem; font-weight: 700; color: var(--brand-dark); }

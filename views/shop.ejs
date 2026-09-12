@@ -23,6 +23,7 @@
       <p class="mt-3">No books matched your search. Try a different title or author.</p>
     </div>
   <% } else { %>
+    <p class="text-muted mb-3"><%= totalItems %> book<%= totalItems === 1 ? '' : 's' %> found · Page <%= page %> of <%= totalPages %></p>
     <div class="row g-4">
       <% books.forEach(book => { %>
         <div class="col-6 col-md-4 col-lg-3">
@@ -30,5 +31,47 @@
         </div>
       <% }) %>
     </div>
+
+    <% if (totalPages > 1) { %>
+      <%
+        const qsBase = (p) => {
+          const params = new URLSearchParams();
+          if (activeCategory && activeCategory !== 'All') params.set('category', activeCategory);
+          if (q) params.set('q', q);
+          params.set('page', p);
+          return '/shop?' + params.toString();
+        };
+        const windowSize = 2;
+        let startPage = Math.max(1, page - windowSize);
+        let endPage = Math.min(totalPages, page + windowSize);
+      %>
+      <nav aria-label="Catalog pages" class="mt-5">
+        <ul class="pagination justify-content-center flex-wrap">
+          <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= qsBase(page - 1) %>" aria-label="Previous">&laquo;</a>
+          </li>
+
+          <% if (startPage > 1) { %>
+            <li class="page-item"><a class="page-link" href="<%= qsBase(1) %>">1</a></li>
+            <% if (startPage > 2) { %><li class="page-item disabled"><span class="page-link">…</span></li><% } %>
+          <% } %>
+
+          <% for (let p = startPage; p <= endPage; p++) { %>
+            <li class="page-item <%= p === page ? 'active' : '' %>">
+              <a class="page-link" href="<%= qsBase(p) %>"><%= p %></a>
+            </li>
+          <% } %>
+
+          <% if (endPage < totalPages) { %>
+            <% if (endPage < totalPages - 1) { %><li class="page-item disabled"><span class="page-link">…</span></li><% } %>
+            <li class="page-item"><a class="page-link" href="<%= qsBase(totalPages) %>"><%= totalPages %></a></li>
+          <% } %>
+
+          <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= qsBase(page + 1) %>" aria-label="Next">&raquo;</a>
+          </li>
+        </ul>
+      </nav>
+    <% } %>
   <% } %>
 </div>
