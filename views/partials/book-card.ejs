@@ -1,5 +1,5 @@
 <div class="book-card">
-  <a href="/book/<%= book.id %>"><img src="<%= book.cover %>" alt="<%= book.title %>"></a>
+  <a href="/book/<%= book.id %>"><img src="<%= book.cover %>" alt="<%= book.title %>" loading="lazy"></a>
   <div class="book-card-body">
     <div class="book-cat"><%= book.category %></div>
     <div class="book-title"><a href="/book/<%= book.id %>"><%= book.title %></a></div>

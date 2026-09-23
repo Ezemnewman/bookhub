@@ -30,6 +30,11 @@ a { text-decoration: none; }
 }
 .top-bar a { color: #cfd3dc; margin-left: 18px; }
 .top-bar a:hover { color: #fff; }
+@media (max-width: 767px) {
+  .top-bar-msg { display: none; }
+  .top-bar .container { justify-content: center; }
+  .top-bar a { margin: 0 10px; }
+}
 
 /* ---- Header ---- */
 .site-header { border-bottom: 1px solid #eee; }
@@ -45,12 +50,38 @@ a { text-decoration: none; }
 .search-form { max-width: 280px; margin-right: 20px; }
 .search-form input { border-radius: 20px 0 0 20px; }
 .search-form button { border-radius: 0 20px 20px 0; background: var(--brand); border-color: var(--brand); color: #fff; }
-.nav-icons { display: flex; align-items: center; gap: 18px; font-size: 1.25rem; }
-.nav-icons a { color: var(--ink); position: relative; }
+
+/* Quick actions (account + cart icons) stay visible on every screen size,
+   including mobile — never hidden behind the hamburger toggle. */
+.quick-actions { gap: 14px; }
+.nav-icon-link {
+  color: var(--ink);
+  position: relative;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.nav-icon-link:hover { background: var(--bg-soft); color: var(--brand); }
 .cart-link .badge {
-  position: absolute; top: -8px; right: -12px;
+  position: absolute; top: 2px; right: 2px;
   background: var(--brand); color: #fff; border-radius: 50%;
-  font-size: 0.65rem; padding: 2px 6px;
+  font-size: 0.62rem; min-width: 16px; height: 16px; line-height: 16px;
+  padding: 0 4px; text-align: center;
+}
+.navbar-toggler {
+  border: none; padding: 4px 8px; margin-left: 4px;
+}
+.navbar-toggler:focus { box-shadow: none; }
+
+@media (max-width: 991.98px) {
+  .navbar > .container { padding-top: 10px; padding-bottom: 10px; }
+  .navbar-collapse { margin-top: 14px; }
+  .navbar-nav { margin-bottom: 14px; }
+  .search-form { max-width: 100%; margin-right: 0; }
 }
 
 /* ---- Hero ---- */
@@ -60,6 +91,12 @@ a { text-decoration: none; }
 }
 .hero h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; }
 .hero p { color: var(--ink-soft); font-size: 1.1rem; margin: 20px 0 30px; }
+@media (max-width: 767px) {
+  .hero { padding: 44px 0; }
+  .hero h1 { font-size: 2rem; }
+  .hero .btn-brand, .hero .btn-outline-brand { width: 100%; margin: 0 0 10px; }
+}
+
 .btn-brand {
   background: var(--brand); border-color: var(--brand); color: #fff;
   padding: 10px 26px; border-radius: 30px; font-weight: 600;
@@ -122,6 +159,13 @@ a { text-decoration: none; }
   border-radius: 8px; padding: 16px 20px;
 }
 .support-box a { color: var(--brand-dark); }
+
+/* On mobile, keep the checkout / proceed buttons comfortably reachable and
+   full-width so nothing requires horizontal scrolling or a tiny tap target. */
+@media (max-width: 767px) {
+  .summary-box .btn { padding: 12px; font-size: 1.05rem; }
+  .cart-table td, .cart-table th { white-space: nowrap; }
+}
 
 /* ---- Forms ---- */
 .auth-card { max-width: 440px; margin: 0 auto; border: 1px solid #eee; border-radius: var(--card-radius); padding: 34px; }

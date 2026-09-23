@@ -1,14 +1,27 @@
 <header class="site-header">
   <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-      <a class="navbar-brand" href="/">
+    <div class="container flex-wrap">
+      <a class="navbar-brand order-1" href="/">
         <i class="bi bi-book-half"></i> Book<span>Hub</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav mx-auto">
+
+      <!-- Always visible, even on mobile: quick actions + menu toggle -->
+      <div class="d-flex align-items-center order-2 order-lg-3 quick-actions">
+        <a href="/my-account" title="My Account" class="nav-icon-link">
+          <i class="bi bi-person"></i>
+        </a>
+        <a href="/cart" class="cart-link nav-icon-link" title="Cart">
+          <i class="bi bi-bag"></i>
+          <span class="badge"><%= cartCount %></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <!-- Collapsible on mobile: nav links + search -->
+      <div class="collapse navbar-collapse order-3 order-lg-2" id="mainNav">
+        <ul class="navbar-nav mx-lg-auto">
           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
           <li class="nav-item"><a class="nav-link" href="/service">Our Service</a></li>
@@ -19,13 +32,6 @@
           <input class="form-control" type="search" name="q" placeholder="Search books or authors...">
           <button class="btn" type="submit"><i class="bi bi-search"></i></button>
         </form>
-        <div class="nav-icons">
-          <a href="/my-account" title="My Account"><i class="bi bi-person"></i></a>
-          <a href="/cart" class="cart-link" title="Cart">
-            <i class="bi bi-bag"></i>
-            <span class="badge"><%= cartCount %></span>
-          </a>
-        </div>
       </div>
     </div>
   </nav>

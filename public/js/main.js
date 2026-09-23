@@ -18,9 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   });
 
-  // ---- Checkout payment field formatting ----
+  // Close the mobile nav automatically after tapping a link inside it,
+  // so the menu doesn't stay open covering the page on small screens.
+  const mainNav = document.getElementById('mainNav');
+  if (mainNav) {
+    mainNav.querySelectorAll('a.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mainNav.classList.contains('show')) {
+          bootstrap.Collapse.getOrCreateInstance(mainNav).hide();
+        }
+      });
+    });
+  }
 
-  // Card number: digits only, grouped in 4s ("4242 4242 4242 4242")
+  // ---- Checkout payment field formatting ----
   const cardNumber = document.getElementById('cardNumber');
   if (cardNumber) {
     cardNumber.addEventListener('input', () => {
@@ -29,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Expiry: digits only, auto-insert "/" after MM ("MM/YY")
   const cardExpiry = document.getElementById('cardExpiry');
   if (cardExpiry) {
     cardExpiry.addEventListener('input', () => {
@@ -41,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // CVC: digits only
   const cardCvc = document.getElementById('cardCvc');
   if (cardCvc) {
     cardCvc.addEventListener('input', () => {

@@ -24,13 +24,11 @@ if (!process.env.SESSION_SECRET) {
   console.warn('[server] SESSION_SECRET is not set — set it in your environment before deploying.');
 }
 
-// ---- View engine ----
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('layout', 'layout');
 
-// ---- Middleware ----
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
