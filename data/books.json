@@ -6538,5 +6538,77 @@
     "rating": 4,
     "cover": "/images/covers/Some Knowledg are never To be Unearthed.png",
     "description": "some knowledge of the tomb of Y'han-Tur has been lost to time, but the few who have seen it and lived to tell the tale speak of a place of unimaginable horror and ancient evil."
+  },
+  {
+    "id": "546",
+    "title": "Killer New App",
+    "author": "Scott MacKenzie",
+    "category": "Fiction",
+    "format": "EPUB / PDF",
+    "price": 14.99,
+    "oldPrice": null,
+    "rating": 5,
+    "cover": "/images/covers/killer new app.jpg",
+    "description": "A high-stakes techno-thriller exploring the terrifying dark side of emerging technology and digital obsession."
+  },
+  {
+    "id": "547",
+    "title": "Film Manifestos and Global Cinema Cultures: A Critical Anthology",
+    "author": "Scott MacKenzie",
+    "category": "Mystery & Thriller",
+    "format": "EPUB / PDF",
+    "price": 29.99,
+    "oldPrice": null,
+    "rating": 4,
+    "cover": "/images/covers/fillm manifesto.jpg",
+    "description": "A comprehensive critical anthology gathering film manifestos across global cinema cultures and movements."
+  },
+  {
+    "id": "548",
+    "title": "And then ? -Extrait offert-",
+    "author": "Scott MacKenzie, Karina Halle",
+    "category": "Romance",
+    "format": "EPUB / PDF",
+    "price": 0.00,
+    "oldPrice": null,
+    "rating": 4,
+    "cover": "/images/covers/wait fro it.jpg",
+    "description": "A captivating preview excerpt featuring romance and suspense co-authored by Scott MacKenzie and Karina Halle."
+  },
+  {
+    "id": "549",
+    "title": "Madeline's",
+    "author": "Scott MacKenzie, Vince Stark",
+    "category": "Mystery & Thriller",
+    "format": "EPUB / PDF",
+    "price": 9.99,
+    "oldPrice": null,
+    "rating": 4,
+    "cover": "/images/covers/madeline's.jpg",
+    "description": "A thrilling collaborative narrative delving into secrets, suspense, and dark hidden truths."
+  },
+  {
+    "id": "550",
+    "title": "Process Cinema: Handmade Film in the Digital Age",
+    "author": "Scott MacKenzie, Janine Marchessault",
+    "category": "Mystery & Thriller",
+    "format": "EPUB / PDF",
+    "price": 24.99,
+    "oldPrice": null,
+    "rating": 5,
+    "cover": "/images/covers/process-cinemas.jpg",
+    "description": "An in-depth exploration of alternative and handmade filmmaking practices in an increasingly digital world."
+  },
+  {
+    "id": "551",
+    "title": "ArchiCAD for AutoCAD Users",
+    "author": "Scott MacKenzie, Simon Gilbert",
+    "category": "Architecture & Software",
+    "format": "EPUB / PDF",
+    "price": 19.99,
+    "oldPrice": null,
+    "rating": 4,
+    "cover": "/images/covers/ArchiCAD for AutoCAD Users.jpg",
+    "description": "A practical transition guide designed to help AutoCAD users transition smoothly to ArchiCAD."
   }
 ]
