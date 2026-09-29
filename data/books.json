@@ -6526,5 +6526,17 @@
     "rating": 4,
     "cover": "/images/covers/544.png",
     "description": "A gentle, warmly illustrated picture book about learning that it's okay to be scared sometimes, written for young readers and the grown-ups who read along."
+  },
+  {
+    "id": "545",
+    "title": "the tomb of Y'han-Tur",
+    "author": "Ruthie Applebaum",
+    "category": "horrow",
+    "format": "EPUB / PDF",
+    "price": 12.84,
+    "oldPrice": null,
+    "rating": 4,
+    "cover": "/images/covers/Some Knowledg are never To be Unearthed.png",
+    "description": "some knowledge of the tomb of Y'han-Tur has been lost to time, but the few who have seen it and lived to tell the tale speak of a place of unimaginable horror and ancient evil."
   }
 ]
